@@ -1,4 +1,10 @@
-import React from 'react';
+import React, {useState} from "react";
+import { Form, Input, Button, Select } from "antd";
+import styled from "styled-components";
+import { useHistory } from "react-router-dom";
+import {UserOutlined} from "@ant-design/icons";
+
+const { TextArea } = Input;
 
 class Input extends React.Component {
     constructor(props) {
