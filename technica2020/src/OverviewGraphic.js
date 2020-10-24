@@ -11,7 +11,7 @@ const dummyData = {
         "design": 6,
         "econ": 6,
         "webdev": 3,
-        "ml": 2, 
+        "ml": 2,
         "ta": 5
     },
 
@@ -33,10 +33,10 @@ const dummyData = {
 }
 
 const dummyData2 = [
-    {x: "school", y: 40},
-    {x: "social", y: 10},
-    {x: "work", y: 11},
-    {x: "exercise", y: 7},
+    { x: "school", y: 40 },
+    { x: "social", y: 10 },
+    { x: "work", y: 11 },
+    { x: "exercise", y: 7 },
 ]
 
 
@@ -44,28 +44,58 @@ const dummyData2 = [
 export default function OverviewGraphic(datain) {
 
     //parse datain to a form that the graph will accept
-    const data = JSON.parse(datain)
-    let dataArr = [] 
+    
+    //console.log("datain",datain)
 
-    for (let cat in data){
-        let hours = 0
-        for (let obj in data[cat]){
-            hours += cat[obj]
+    const d2 = {
+        "school": {
+            "class1": 2,
+            "class2": 3
+        },
+        "work": {
+            "juni": 4
         }
-        dataArr.push({x: cat, y:hours})
     }
+
+    let dataArr = []
+
+    console.log("d2 is " + datain)
+
+    let newdata = datain['datain']
+
+    let total = 0
+    for (let cat in newdata) {
+        console.log("cat " + cat)
+        let hours = 0
+        for (let set in newdata[cat]) {
+            hours += newdata[cat][set]
+        }
+        total+=hours
+
+        dataArr.push({ x: cat, y: hours })
+    }
+
+    const timeleft = 24*7 - total
+    let n = "hours left \n (" + Math.round(timeleft/7) + "  per day)\n total"
+    
+    dataArr.push({x: n, y: 24*7 - total})
+
+    console.log(dataArr)
+
 
     return (
         // <VictoryContainer width="50%" height="50%">
 
         // <VictoryChart  domainPadding={20} >
-           
+
+        <div>
             
             <VictoryPie //height={500} width = {500}
                 data={dataArr}
                 labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
-                height = {200}
+                height={200}
             />
+        </div>
 
 
         // </VictoryChart>

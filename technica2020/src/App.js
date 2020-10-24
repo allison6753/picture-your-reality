@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import OverviewGraphic from './OverviewGraphic';
+import Input from './Input';
+
 import { VictoryContainer } from 'victory';
 
 
@@ -38,7 +40,8 @@ function App() {
     <div>
       <div>Hello</div>
 
-      <OverviewGraphic datain={dummyData} width={200} height={200}> </OverviewGraphic>
+      {/* <Input> </Input> */}
+      <OverviewGraphic datain={dummyData}> </OverviewGraphic>
 
     </div>
   );
