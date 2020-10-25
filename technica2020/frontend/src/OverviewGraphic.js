@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as V from 'victory';
+// import ReactDOM from 'react-dom';
+// import * as V from 'victory';
 
-import { VictoryPie, VictoryChart, VictoryAxis, VictoryContainer } from 'victory';
+import { VictoryPie, VictoryLabel, VictoryChart, VictoryAxis, VictoryContainer, VictoryLegend } from 'victory';
 
 const dummyData = {
     "school": {
@@ -44,61 +44,117 @@ const dummyData2 = [
 export default function OverviewGraphic(datain) {
 
     //parse datain to a form that the graph will accept
-    
-    //console.log("datain",datain)
 
-    const d2 = {
-        "school": {
-            "class1": 2,
-            "class2": 3
-        },
-        "work": {
-            "juni": 4
+
+
+    const formatData = (datain) => {
+
+        let dataArr = []
+
+        console.log("data-in is " + datain)
+
+        let newdata = datain['datain']
+
+        let total = 0
+        for (let cat in newdata) {
+            console.log("cat " + cat)
+            let hours = 0
+            for (let set in newdata[cat]) {
+                hours += newdata[cat][set]
+            }
+
+            total += hours
+
+
+            dataArr.push({ x: cat, y: hours })
         }
+
+        console.log("total hours!!!! " + total)
+
+        const timeleft = 24 * 7 - total
+        let n = "hours left \n (" + Math.round(timeleft / 7) + "  per day)\n total"
+
+        dataArr.push({ x: n, y: 24 * 7 - total })
+
+        console.log(dataArr)
+        return dataArr
     }
 
-    let dataArr = []
-
-    console.log("d2 is " + datain)
-
-    let newdata = datain['datain']
-
-    let total = 0
-    for (let cat in newdata) {
-        console.log("cat " + cat)
-        let hours = 0
-        for (let set in newdata[cat]) {
-            hours += newdata[cat][set]
-        }
-        total+=hours
-
-        dataArr.push({ x: cat, y: hours })
-    }
-
-    const timeleft = 24*7 - total
-    let n = "hours left \n (" + Math.round(timeleft/7) + "  per day)\n total"
-    
-    dataArr.push({x: n, y: 24*7 - total})
-
-    console.log(dataArr)
-
-
+    const pieData = formatData(datain)
+    // const componentDidUpdate (prevProps) {
+    //     // Typical usage (don't forget to compare props):
+    //     if (this.props.userID !== prevProps.userID) {
+    //       this.fetchData(this.props.userID);
+    //     }
+    //   }
+    // useEffect(() => {
+    //     //document.title = `You clicked ${count} times`;
+    //   });
     return (
         // <VictoryContainer width="50%" height="50%">
 
         // <VictoryChart  domainPadding={20} >
 
         <div>
-            
-            <VictoryPie //height={500} width = {500}
-                data={dataArr}
-                labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
-                height={200}
-            />
+            {/* <VictoryChart >
+
+                <VictoryLegend x={125} y={50}
+                    title="Legend"
+                    centerTitle
+                    orientation="horizontal"
+                    gutter={20}
+                    style={{ border: { stroke: "black" }, title: { fontSize: 20 } }}
+                    // data={[
+                    //     { name: "One", symbol: { fill: "tomato", type: "star" } },
+                    //     { name: , symbol: { fill: "orange" } },
+                    //     { name: "", symbol: { fill: "gold" } }
+                    // ]}
+                    data={pieData.map(({ x, y }) => ({ name: x, symbol: { fill: 'blue' } }))}
+                />
+                <VictoryPie //height={500} width = {500}
+                    data={formatData(pieData)}
+                    labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
+                    height={200}
+                    colorScale="qualitative"
+                />
+            </VictoryChart> */}
+
+            <VictoryChart
+               
+                standalone={true}
+            >
+                <VictoryLegend
+                    borderComponent={<g />}
+                    borderPadding={0}
+                    title="Legend"
+                    centerTitle
+                    orientation="vertical"
+                    gutter={0}
+                    colorScale="qualitative"
+                    padding={70}
+
+                    data={pieData.map(({ x, y }) => ({ name: `${x} hours: ${y}`}))}
+                                        //labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
+
+                />
+                <VictoryAxis style={{
+                    axis: { stroke: "transparent" },
+                    ticks: { stroke: "transparent" },
+                    tickLabels: { fill: "transparent" }
+                }} />
+                <VictoryPie 
+                    data={pieData}
+                    //labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
+                    labels={() => null}
+                    height={200}
+                    colorScale="qualitative"
+                />
+            </VictoryChart>
+
+
+
         </div>
 
 
-        // </VictoryChart>
-        // </VictoryContainer>
     )
 }
