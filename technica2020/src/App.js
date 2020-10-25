@@ -1,8 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import OverviewGraphic from './OverviewGraphic';
-import Input from './Input';
-
+import UserInput from './UserInput'
 import { VictoryContainer } from 'victory';
 
 
@@ -38,9 +37,10 @@ const dummyData = {
 function App() {
   return (
     <div>
-      <div>Hello</div>
+      <div>Hello world</div>
 
-      {/* <Input> </Input> */}
+      <UserInput></UserInput>
+
       <OverviewGraphic datain={dummyData}> </OverviewGraphic>
 
     </div>

@@ -1,18 +1,26 @@
+//sendDataSomewhere https://stackoverflow.com/questions/45941684/save-submitted-form-values-in-a-json-file-using-react
+//
 import React, {useState} from "react";
 import { Form, Input, Button, Select } from "antd";
-import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+//import styled from "styled-components";
+//import { useHistory } from "react-router-dom";
 import {UserOutlined} from "@ant-design/icons";
+import jsonfile from'jsonfile';
+
+const fs = require('fs');
+const file = new File([""], "filename");
 
 const { TextArea } = Input;
 
-class Input extends React.Component {
+var datain = {}
+
+class UserInput extends React.Component {
     constructor(props) {
       super(props);
       this.state = {value: ''};
   
       this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+      this.sendDataSomewhere = this.sendDataSomewhere.bind(this);
     }
   
     handleChange(event) {
@@ -23,10 +31,17 @@ class Input extends React.Component {
       alert('A category was added: ' + this.state.value);
       event.preventDefault();
     }
-  
+    
+    sendDataSomewhere = function jsonfile(file) {
+      let dataTest = JSON.stringify(datain)
+      fs.writeFile(file, dataTest, function (err) {
+        console.error(err);
+      });
+    };
+
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.sendDataSomewhere(file)}>
           <label>
             <select value={this.state.value} onChange={this.handleChange}>
               <option value="school">School</option>
@@ -59,12 +74,4 @@ class Input extends React.Component {
     }
   }
 
-function Input(){
-    return(
-        <div>
-            
-        </div>
-    )
-}
-
-export default Input;
+export default UserInput;
