@@ -1,60 +1,14 @@
-import React from 'react';
-// import ReactDOM from 'react-dom';
-// import * as V from 'victory';
-
-import { VictoryPie, VictoryLabel, VictoryChart, VictoryAxis, VictoryContainer, VictoryLegend } from 'victory';
-
-const dummyData = {
-    "school": {
-        "algo": 8,
-        "graphics": 15,
-        "design": 6,
-        "econ": 6,
-        "webdev": 3,
-        "ml": 2,
-        "ta": 5
-    },
-
-    "social": {
-        "sorority": 7,
-        "cultural club": 3,
-        "SWE": 1
-    },
-
-    "work": {
-        "Juni Learning": 6,
-        "Starbucks": 5
-    },
-
-    "exercise": {
-        "gym": 3,
-        "frisbee": 4
-    }
-}
-
-const dummyData2 = [
-    { x: "school", y: 40 },
-    { x: "social", y: 10 },
-    { x: "work", y: 11 },
-    { x: "exercise", y: 7 },
-]
-
+import React, { useState } from 'react';
+import { VictoryPie, VictoryLabel, VictoryChart, VictoryAxis, VictoryLegend } from 'victory';
 
 
 export default function OverviewGraphic(datain) {
 
-    //parse datain to a form that the graph will accept
 
-
-
-    const formatData = (datain) => {
+    const formatDataGeneral = (datain) => {
 
         let dataArr = []
-
-        console.log("data-in is " + datain)
-
         let newdata = datain['datain']
-
         let total = 0
         for (let cat in newdata) {
             console.log("cat " + cat)
@@ -62,99 +16,124 @@ export default function OverviewGraphic(datain) {
             for (let set in newdata[cat]) {
                 hours += newdata[cat][set]
             }
-
             total += hours
-
-
             dataArr.push({ x: cat, y: hours })
         }
-
-        console.log("total hours!!!! " + total)
-
         const timeleft = 24 * 7 - total
-        let n = "hours left \n (" + Math.round(timeleft / 7) + "  per day)\n total"
+        let n = "hours left \n (" + Math.round(timeleft / 7) + "  per day)\n "
 
         dataArr.push({ x: n, y: 24 * 7 - total })
+
+        return dataArr
+    }
+
+    const formatDataSpecific = (datain, cat) => {
+
+        if (cat === null) {
+            return [{ x: "click on a category!", y: 168 }]
+        }
+
+
+        let dataArr = []
+        let newdata = datain['datain']
+
+        console.log("newdata:" + newdata)
+
+        for (let set in newdata[cat]) {
+            const hours = newdata[cat][set]
+            dataArr.push({ x: set, y: hours })
+        }
 
         console.log(dataArr)
         return dataArr
     }
 
-    const pieData = formatData(datain)
-    // const componentDidUpdate (prevProps) {
-    //     // Typical usage (don't forget to compare props):
-    //     if (this.props.userID !== prevProps.userID) {
-    //       this.fetchData(this.props.userID);
-    //     }
-    //   }
-    // useEffect(() => {
-    //     //document.title = `You clicked ${count} times`;
-    //   });
+    const pieData = formatDataGeneral(datain)
+    const [breakdown, setBreakdown] = useState([{ x: "click on a category!", y: 168 }]);
+    const [catName, setCatName] = useState("None");
+
     return (
-        // <VictoryContainer width="50%" height="50%">
 
-        // <VictoryChart  domainPadding={20} >
 
-        <div>
-            {/* <VictoryChart >
+        <div style={{
+            display: 'flex',
+            alignItems: 'center',
 
-                <VictoryLegend x={125} y={50}
-                    title="Legend"
-                    centerTitle
-                    orientation="horizontal"
-                    gutter={20}
-                    style={{ border: { stroke: "black" }, title: { fontSize: 20 } }}
-                    // data={[
-                    //     { name: "One", symbol: { fill: "tomato", type: "star" } },
-                    //     { name: , symbol: { fill: "orange" } },
-                    //     { name: "", symbol: { fill: "gold" } }
-                    // ]}
-                    data={pieData.map(({ x, y }) => ({ name: x, symbol: { fill: 'blue' } }))}
-                />
-                <VictoryPie //height={500} width = {500}
-                    data={formatData(pieData)}
-                    labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
-                    height={200}
-                    colorScale="qualitative"
-                />
-            </VictoryChart> */}
+        }}>
 
-            <VictoryChart
-               
-                standalone={true}
-            >
-                <VictoryLegend
-                    borderComponent={<g />}
-                    borderPadding={0}
-                    title="Legend"
-                    centerTitle
-                    orientation="vertical"
-                    gutter={0}
-                    colorScale="qualitative"
-                    padding={70}
+            <div width={1000}>
+                
+                <h2 style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>---------------------------------------General Overview---------------------------------------</h2>
+                <VictoryChart
+                    padding={50}
+                >
+                    <VictoryLegend
+                        borderComponent={<g />}
+                        borderPadding={0}
+                        title="Legend"
+                        centerTitle
+                        orientation="vertical"
+                        gutter={0}
+                        colorScale="qualitative"
+                        padding={70}
 
-                    data={pieData.map(({ x, y }) => ({ name: `${x} hours: ${y}`}))}
-                                        //labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
-
-                />
-                <VictoryAxis style={{
-                    axis: { stroke: "transparent" },
-                    ticks: { stroke: "transparent" },
-                    tickLabels: { fill: "transparent" }
-                }} />
-                <VictoryPie 
-                    data={pieData}
+                        data={pieData.map(({ x, y }) => ({ name: `${x} hours: ${y}` }))}
                     //labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
-                    labels={() => null}
-                    height={200}
-                    colorScale="qualitative"
+
+                    />
+                    <VictoryAxis style={{
+                        axis: { stroke: "transparent" },
+                        ticks: { stroke: "transparent" },
+                        tickLabels: { fill: "transparent" }
+                    }} />
+                    <VictoryPie
+                        data={pieData}
+                        // labels={({ datum }) => `${datum.x} hours: ${datum.y}`}
+                        labels={() => null}
+                        height={200}
+                        colorScale="qualitative"
+                        labelComponent={<VictoryLabel renderInPortal />}
+
+                        events={[{
+                            target: "data",
+                            eventHandlers: {
+                                onClick: (evt, clickedProps) => {
+                                    const clickedIndex = clickedProps.index;
+                                    console.log("index:" + clickedIndex)
+                                    const x = pieData[clickedIndex].x
+                                    console.log("x is: " + x)
+                                    setBreakdown(formatDataSpecific(datain, x))
+                                    console.log("data is now:" + JSON.stringify(formatDataSpecific(datain, x)))
+                                    setCatName(x)
+                                }
+                            }
+                        }]}
+                    />
+
+                </VictoryChart>
+            </div>
+
+            <div display="flex">
+                <h3 style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}>Breakdown: {catName}</h3>
+                <VictoryPie
+                    data={breakdown}
+                    labels={({ datum }) => `${datum.x}: ${datum.y} hr`}
+                    // labels={() => null}
+                    colorScale="blue"
+                    labelPlacement="parallel"
+                    padding={100}
                 />
-            </VictoryChart>
-
-
+            </div>
 
         </div>
-
 
     )
 }
