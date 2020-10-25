@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://technica123:<password>@technica2020.ybbu9.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "jwtSecret": "mysecrettoken"
+}
